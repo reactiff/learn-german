@@ -1,5 +1,4 @@
-import { useState } from 'react';
-
+import { useState, useCallback } from 'react';
 import Game from './Game';
 import Setup from './Setup';
 import GameResults from './GameResults';
