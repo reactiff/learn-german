@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 
-import { Button, ButtonGroup, Checkbox, Typography } from '@material-ui/core';
+import { Button, ButtonGroup, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import data from '../../data/verbs';
 import WordList from './WordList';
 
-import ui, { inline } from '@reactiff/ui-core';
+import ui from '@reactiff/ui-core';
 import { useMemo } from 'react';
 
 
@@ -24,7 +24,7 @@ export default function Verbs() {
         (level) => {
             setFilter(f => Object.assign({}, f, { level }));
         }
-    );
+    , []);
 
     const items = useMemo(() => {
         if (filter.level === 0) return data;

@@ -9,6 +9,6 @@ git push
 yarn deploy
 
 @echo off
-set /p msg="Press ENTER to close the window"
+set /p ext="Press ENTER to close the window"
 @echo on
 

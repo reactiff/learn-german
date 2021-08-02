@@ -46,7 +46,7 @@ export default function VisualTimeout({ startTime, duration, onTimeout }) {
             }
         }
 
-    }, [startTime]);
+    }, [startTime, duration, onTimeout]);
 
     return (
         <div className={classes.root}>

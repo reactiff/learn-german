@@ -5,10 +5,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-import ui, { camelToSentenceCase, range } from '@reactiff/ui-core';
-
-import Selector from '../../components/Selector';
-import { useState } from 'react';
+import ui, { camelToSentenceCase } from '@reactiff/ui-core';
 
 const useStyles = makeStyles((theme) => ({
     root: {

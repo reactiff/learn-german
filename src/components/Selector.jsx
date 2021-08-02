@@ -49,11 +49,7 @@ export default function Selector(props) {
 
   const [id] = useState(uuid());
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    age: '',
-    name: 'hai',
-  });
-
+  
   const handleChange = (event) => {
     props.onChange && props.onChange(event.target.value);
   };

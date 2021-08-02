@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import WordCard from './WordCard';
-import { ArrowBack, ArrowForward } from '@material-ui/icons';
+import { ArrowBack } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 
 import ui from '@reactiff/ui-core';

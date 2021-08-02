@@ -3,12 +3,11 @@ import { useRef } from "react";
 
 import data from '../../data/verbs';
 
-import ui, { sortBy } from '@reactiff/ui-core';
+import { sortBy } from '@reactiff/ui-core';
 import { useCallback } from "react";
 import { Button, Typography } from "@material-ui/core";
 
 import { makeStyles } from '@material-ui/core/styles';
-import { classes } from "istanbul-lib-coverage";
 import VisualTimeout from "../../components/VisualTimeout";
 const useStyles = makeStyles((theme) => ({
     choice: {
@@ -62,11 +61,11 @@ export default function Game({ options, onEnd }) {
     const [startTime, setStartTime] = useState();
     const localRef = useRef({});
 
-    const nextCombo = (_words, _local) => {
+    const nextCombo = useCallback((_words, _local) => {
         const local = localRef.current;
 
         // NEED TO END THE LOOP WHEN NO MORE WORDS AVAILABLE
-        
+
         const next = getNextCombination(
             _words || words,
             _local || local
@@ -74,9 +73,9 @@ export default function Game({ options, onEnd }) {
         setWord(next.word);
         setChoices(next.choices);
         setStartTime(Date.now());
-    };
+    }, [words]);
 
-    const handleTimeout = () => {
+    const handleTimeout = useCallback(() => {
         console.log('Timeout occurred');
         const local = localRef.current;
         local.results.push({
@@ -87,7 +86,7 @@ export default function Game({ options, onEnd }) {
             status: 'timed out',
         });
         nextCombo();
-    };
+    }, [choices, nextCombo, word, options.time]);
 
     const handleChoice = (choice) => {
         const local = localRef.current;
@@ -114,7 +113,7 @@ export default function Game({ options, onEnd }) {
             : data.filter(w => w.type === options.level);
         setWords(_words);
         nextCombo(_words, local);
-    }, [options, localRef]);
+    }, [options, nextCombo]);
 
     return <>
         <VisualTimeout
