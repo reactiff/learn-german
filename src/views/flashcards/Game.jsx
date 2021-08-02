@@ -9,6 +9,7 @@ import { Button, Typography } from "@material-ui/core";
 
 import { makeStyles } from '@material-ui/core/styles';
 import VisualTimeout from "../../components/VisualTimeout";
+
 const useStyles = makeStyles((theme) => ({
     choice: {
         display: 'block',
@@ -18,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
         lineHeight: 3,
     },
 }));
-
 
 const NUMBER_OF_CHOICES = 4;
 
@@ -58,25 +58,38 @@ export default function Game({ options, onEnd }) {
     const [words, setWords] = useState();
     const [word, setWord] = useState();
     const [choices, setChoices] = useState();
+    const [answer, setAnswer] = useState();
+
     const [startTime, setStartTime] = useState();
     const localRef = useRef({});
 
-    const nextCombo = useCallback((_words, _local) => {
+
+    const nextCombo = useCallback((_words) => {
+
         const local = localRef.current;
 
+        if (Object.keys(local.processed).length === _words.length) {
+            const stats = {
+                score: local.results.length,
+            };
+            onEnd(stats);
+        }
         // NEED TO END THE LOOP WHEN NO MORE WORDS AVAILABLE
 
         const next = getNextCombination(
-            _words || words,
-            _local || local
+            _words,
+            local,
         );
+
+
         setWord(next.word);
         setChoices(next.choices);
+        setAnswer(undefined);
         setStartTime(Date.now());
-    }, [words]);
+
+    }, []);
 
     const handleTimeout = useCallback(() => {
-        console.log('Timeout occurred');
         const local = localRef.current;
         local.results.push({
             word,
@@ -85,11 +98,13 @@ export default function Game({ options, onEnd }) {
             correct: false,
             status: 'timed out',
         });
-        nextCombo();
-    }, [choices, nextCombo, word, options.time]);
+        nextCombo(words);
+    }, [words, choices, nextCombo, word, options.time]);
 
     const handleChoice = (choice) => {
+        if (!!answer) return;
         const local = localRef.current;
+        if (local.timeout) clearTimeout(local.timeout);
         local.results.push({
             word,
             choice,
@@ -98,7 +113,8 @@ export default function Game({ options, onEnd }) {
             correct: choice.german === word.german,
             status: 'selected',
         });
-        nextCombo();
+        setAnswer(word);
+        setTimeout((_words) => nextCombo(words), 500, words);
     };
 
     // effects
@@ -112,12 +128,14 @@ export default function Game({ options, onEnd }) {
             ? data
             : data.filter(w => w.type === options.level);
         setWords(_words);
-        nextCombo(_words, local);
+        nextCombo(_words);
+
     }, [options, nextCombo]);
 
     return <>
         <VisualTimeout
             startTime={startTime}
+            stopped={!!answer}
             duration={options.time * 1000}
             onTimeout={handleTimeout}
         />
@@ -137,12 +155,33 @@ export default function Game({ options, onEnd }) {
 
                 return (
                     <Button
-                        variant="outlined"
+                        key={choice.german}
+                        variant={answer && answer.german === choice.german ? 'contained' : 'outlined'}
                         color="primary"
                         className={classes.choice}
                         onClick={() => handleChoice(choice)}
                     >
-                        {tokens[0]}
+
+                        {
+                            // option
+                            !answer && tokens[0]
+                        }
+
+                        {
+                            // answer given, selected
+                            answer && 
+                            answer.german === choice.german &&
+                            tokens[0]
+                        }
+
+                        {
+                            // answer given, not selected
+                            answer && 
+                            answer.german !== choice.german &&
+                            <>&nbsp;</>
+                        }
+
+                        
                     </Button>
                 )
             })

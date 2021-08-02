@@ -79,7 +79,7 @@ export default function Selector(props) {
         >
           {
             options.map(o => {
-              return <MenuItem value={o.value}>{o.text}</MenuItem>;
+              return <MenuItem key={o.value} value={o.value}>{o.text}</MenuItem>;
             })
           }
         </Select>

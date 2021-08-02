@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function VisualTimeout({ startTime, duration, onTimeout }) {
+export default function VisualTimeout({ startTime, duration, onTimeout, stopped }) {
 
     const classes = useStyles();
     const [progress, setProgress] = React.useState(0);
@@ -25,12 +25,18 @@ export default function VisualTimeout({ startTime, duration, onTimeout }) {
 
             const elapsed = Date.now() - startTime;
 
-            if (elapsed >= duration) {
+            setProgress(Math.min(100, elapsed / duration * 100))
+
+            if (stopped) {
+                return;
+            }
+
+            if (elapsed >= duration ) {
                 onTimeout();
                 return
             }
 
-            setProgress(Math.min(100, elapsed / duration * 100))
+            
 
             animationId = window.requestAnimationFrame(tick);
         }
@@ -46,7 +52,7 @@ export default function VisualTimeout({ startTime, duration, onTimeout }) {
             }
         }
 
-    }, [startTime, duration, onTimeout]);
+    }, [startTime, duration, onTimeout, stopped]);
 
     return (
         <div className={classes.root}>
