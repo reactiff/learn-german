@@ -9,9 +9,9 @@ export default function Flashcards() {
   const [gameOptions, setGameOptions] = useState();
   const [stats, setStats] = useState();
 
-  const handleEnd = (gameStats) => {
+  const handleEnd = useCallback((gameStats) => {
     setStats(gameStats);
-  };
+  }, []);
 
   const playAgain = () => {
     setStats(undefined);

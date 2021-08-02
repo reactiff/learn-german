@@ -81,13 +81,12 @@ export default function Game({ options, onEnd }) {
             local,
         );
 
-
         setWord(next.word);
         setChoices(next.choices);
         setAnswer(undefined);
         setStartTime(Date.now());
 
-    }, []);
+    }, [onEnd]);
 
     const handleTimeout = useCallback(() => {
         const local = localRef.current;
