@@ -8,5 +8,7 @@ git push
 
 yarn deploy
 
-echo
-echo Done!
+@echo off
+set /p msg="Press ENTER to close the window"
+@echo on
+
